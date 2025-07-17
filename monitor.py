@@ -1,10 +1,16 @@
 from time import sleep
 import sys
 
-def alert(message, blink_times=6, delay=1):
-    """Display an alert message with blinking animation."""
+TEMP_MIN = 95
+TEMP_MAX = 102
+PULSE_MIN = 60
+PULSE_MAX = 100
+SPO2_MIN = 90
+
+def alert(message: str, times: int = 6, delay: int = 1) -> None:
+    """Show a blinking alert message."""
     print(message)
-    for _ in range(blink_times):
+    for _ in range(times):
         print('\r* ', end='')
         sys.stdout.flush()
         sleep(delay)
@@ -13,26 +19,25 @@ def alert(message, blink_times=6, delay=1):
         sleep(delay)
     print()
 
-def are_vitals_normal(temperature, pulse_rate, spo2):
-    """Check if all vital signs are within the normal range."""
-    if temperature > 102 or temperature < 95:
+def check_vitals(temp: float, pulse: int, spo2: int) -> bool:
+    """Return True if all vitals are normal, else alert and return False."""
+    if temp > TEMP_MAX or temp < TEMP_MIN:
         alert('Temperature critical!')
         return False
-    elif pulse_rate < 60 or pulse_rate > 100:
+    if pulse < PULSE_MIN or pulse > PULSE_MAX:
         alert('Pulse Rate is out of range!')
         return False
-    elif spo2 < 90:
+    if spo2 < SPO2_MIN:
         alert('Oxygen Saturation out of range!')
         return False
     return True
 
-def unique(seq):
-    """Remove duplicates from a list while preserving order."""
+def unique(seq: list) -> list:
+    """Return a list with duplicates removed, preserving order."""
     seen = set()
     return [x for x in seq if not (x in seen or seen.add(x))]
 
 # Example usage
 if __name__ == "__main__":
     my_list = [1, 2, 2, 3, 4, 4, 5]
-    unique_list = unique(my_list)
-    print(unique_list)  # Output: [1, 2, 3, 4, 5]
+    print(unique(my_list))  # Output: [1, 2, 3, 4, 5]
